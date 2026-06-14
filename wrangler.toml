@@ -1,0 +1,30 @@
+name = "baton-router"
+main = "src/index.ts"
+compatibility_date = "2025-05-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ── D1: Message store + audit log ──────────────────────────────────
+[[d1_databases]]
+binding = "DB"
+database_name = "baton-router-db"
+database_id = "placeholder-replace-with-actual-id"
+
+# ── Queues: Async delivery pipeline ────────────────────────────────
+[[queues.producers]]
+queue = "baton-queue"
+binding = "BATON_QUEUE"
+
+[[queues.consumers]]
+queue = "baton-queue"
+max_batch_size = 10
+max_batch_timeout = 5
+max_retries = 3
+dead_letter_queue = "baton-dlq"
+
+# ── KV: Rate limiting ──────────────────────────────────────────────
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "placeholder-replace-with-actual-id"
+
+# ── Secrets (set via `wrangler secret put`) ────────────────────────
+# ROUTER_API_KEY — admin key for route management
